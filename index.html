@@ -10,6 +10,7 @@
         <meta property="og:type" content="website" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/css/bootstrap.min.css" integrity="sha512-XWTTruHZEYJsxV3W/lSXG1n3Q39YIWOstqvmFsdNEEQfHoZ6vm6E9GK2OrF6DSJSpIbRbi+Nn0WDPID9O7xB2Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol-ext@3.2.29/dist/ol-ext.min.css" integrity="sha256-8cWkpgNcAa/qlk/y87d5JkJ1rG+vgssfsp1demk3Bwg=" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ol3/4.6.5/ol.css" integrity="sha512-D2c/nmSVlwoZk29SLwJK8GkLyCyPuNbZ/vZQL/lNzw+o+yXzsbnJt7lK/iCfdBmgyLRDi0qx27gpE8Zb1C6I7g==" crossorigin="anonymous" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sidebar-v2@0.4.0/css/ol3-sidebar.min.css" type="text/css" />
         <link rel="stylesheet" href="css/air-raid-shelters.css" crossorigin="anonymous" />
@@ -58,7 +59,8 @@
                 </div>
                 <div class="sidebar-pane" id="book">
                     <h1 class="sidebar-header">
-                        <span id="weekTitle">說明</span><span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                        <span id="weekTitle">說明</span>
+                        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                     </h1>
                     <div>
                         注意事項：
@@ -69,7 +71,8 @@
                 </div>
                 <div class="sidebar-pane" id="settings">
                     <h1 class="sidebar-header">
-                        <span id="weekTitle">設定</span><span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                        <span id="weekTitle">設定</span>
+                        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                     </h1>
                     <div>
                         <a href="#" class="btn btn-primary btn-lg btn-block" id="btn-geolocation">回到目前位置</a>
@@ -81,9 +84,10 @@
         <div id="map" class="sidebar-map"></div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js" integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous" defer></script>
-        <<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/js/bootstrap.min.js" integrity="sha512-8Y8eGK92dzouwpROIppwr+0kPauu0qqtnzZZNEF8Pat5tuRNJxJXCkbQfJ0HlUG3y1HB3z18CSKmUo7i2zcPpg==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/js/bootstrap.min.js" integrity="sha512-8Y8eGK92dzouwpROIppwr+0kPauu0qqtnzZZNEF8Pat5tuRNJxJXCkbQfJ0HlUG3y1HB3z18CSKmUo7i2zcPpg==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
         <script src="js/ol.js" type="text/javascript" defer></script>
-        <script src="https://cdn.jsdelivr.net/npm/sidebar-v2@0.4.0/js/ol3-sidebar.min.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/sidebar-v2@0.4.0/js/ol3-sidebar.min.js" integrity="sha256-axOAjywCnjuPzcekPlt3E/rGREm2aJP1yy8VFeAsG5E=" crossorigin="anonymous" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/ol-ext@3.2.29/dist/ol-ext.js" integrity="sha256-sIQ1o9nwI7G6TwmCbroa4ptI0ZM2RjHWs5aZKUwCzHg=" crossorigin="anonymous" defer></script>
         <script src="js/air-raid-shelters.js" type="text/javascript" defer></script>
     </body>
 </html>

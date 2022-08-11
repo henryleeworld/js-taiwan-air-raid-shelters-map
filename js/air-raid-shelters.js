@@ -68,7 +68,7 @@ var clusterSource = new ol.source.Cluster({
     source: vectorSource
 });
 
-var vectorPoints = new ol.layer.Vector({
+var vectorPoints = new ol.layer.AnimatedCluster({
     source: clusterSource,
     style: pointStyle
 });
@@ -165,13 +165,16 @@ map.on('singleclick', function(evt) {
                 county.getSource().refresh();
             } else if (p.features) {
                 if (p.features.length > 1) {
-                    const extent = ol.extent.boundingExtent(
-                        p.features.map((r) => r.getGeometry().getCoordinates())
-                    );
-                    map.getView().fit(extent, {
-                        duration: 1000,
-                        padding: [50, 50, 50, 50]
-                    });
+                    var currentZoom = map.getView().getZoom();
+                    if (currentZoom < 15) {
+                        const extent = ol.extent.boundingExtent(
+                            p.features.map((r) => r.getGeometry().getCoordinates())
+                        );
+                        map.getView().fit(extent, {
+                            duration: 1000,
+                            padding: [50, 50, 50, 50]
+                        });
+                    }
                 } else {
                     currentFeature = feature;
                     vectorPoints.getSource().refresh();
@@ -201,6 +204,16 @@ map.on('singleclick', function(evt) {
         }
     });
 });
+
+var selectCluster = new ol.interaction.SelectCluster({
+    // Point radius: to calculate distance between the features
+    pointRadius: 7,
+    // circleMaxObjects: 40,
+    // spiral: false,
+    // autoClose: false,
+    animate: true
+});
+map.addInteraction(selectCluster);
 
 var previousFeature = false;
 var currentFeature = false;
