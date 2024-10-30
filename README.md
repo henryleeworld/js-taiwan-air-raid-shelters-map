@@ -11,8 +11,8 @@ $ git clone
 ----
 
 ## 畫面截圖
-![](https://i.imgur.com/VbYQIyV.png)
+![](https://i.imgur.com/bRjotP1.png)
 > 若授權瀏覽器位置資訊便可自動定位，並以藍點標記使用者所在位置，每個區域都有標示該區的避難點數量，點開可以進一步展開這些點位資料，當圖示代表單一地點，點選後就能看到避難點地址、可容納人數等資訊
 
-![](https://i.imgur.com/uvGC3Zs.png)
+![](https://i.imgur.com/SLhX00y.png)
 > 資料由各地警察局（總隊）自行更新維護
