@@ -10,7 +10,6 @@ var size = ol.extent.getWidth(projectionExtent) / 256;
 var resolutions = new Array(20);
 var matrixIds = new Array(20);
 for (var z = 0; z < 20; ++z) {
-    // generate resolutions and matrixIds arrays for this WMTS
     resolutions[z] = size / Math.pow(2, z);
     matrixIds[z] = z;
 }
@@ -28,7 +27,7 @@ function pointStyle(feature) {
     if (!style) {
         style = [new ol.style.Style({
             image: new ol.style.Circle({
-                radius: 10,
+                radius: 20,
                 stroke: new ol.style.Stroke({
                     color: '#fff'
                 }),
@@ -206,11 +205,7 @@ map.on('singleclick', function(evt) {
 });
 
 var selectCluster = new ol.interaction.SelectCluster({
-    // Point radius: to calculate distance between the features
     pointRadius: 7,
-    // circleMaxObjects: 40,
-    // spiral: false,
-    // autoClose: false,
     animate: true
 });
 map.addInteraction(selectCluster);
