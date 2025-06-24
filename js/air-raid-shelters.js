@@ -23,7 +23,23 @@ var styleCache = {};
 function pointStyle(feature) {
     var color = '#3399CC';
     var size = feature.get('features').length;
-    var style = styleCache[size];
+
+    var hasHighCapacity = false;
+    var features = feature.get('features');
+    for (var i = 0; i < features.length; i++) {
+        var capacity = parseFloat(features[i].get('可容納人數')) || 0;
+        if (capacity > 500) {
+            hasHighCapacity = true;
+            break;
+        }
+    }
+
+    if (hasHighCapacity) {
+        color = '#FF6B35';
+    }
+
+    var cacheKey = size + '_' + (hasHighCapacity ? 'high' : 'normal');
+    var style = styleCache[cacheKey];
     if (!style) {
         style = [new ol.style.Style({
             image: new ol.style.Circle({
@@ -42,7 +58,7 @@ function pointStyle(feature) {
                 })
             })
         })];
-        styleCache[size] = style;
+        styleCache[cacheKey] = style;
     }
     return style;
 }
@@ -119,13 +135,15 @@ function countyStyle(f) {
     return baseStyle;
 }
 
+var countySource = new ol.source.Vector({
+    url: 'data/20200820.json',
+    format: new ol.format.TopoJSON({
+        featureProjection: appView.getProjection()
+    })
+});
+
 var county = new ol.layer.Vector({
-    source: new ol.source.Vector({
-        url: 'data/20200820.json',
-        format: new ol.format.TopoJSON({
-            featureProjection: appView.getProjection()
-        })
-    }),
+    source: countySource,
     style: countyStyle,
     zIndex: 50
 });
@@ -205,10 +223,49 @@ map.on('singleclick', function(evt) {
 });
 
 var selectCluster = new ol.interaction.SelectCluster({
-    pointRadius: 7,
+    pointRadius: 15,
     animate: true
 });
 map.addInteraction(selectCluster);
+
+function spiderMarkerStyle(feature) {
+    var originalFeatures = feature.get('features');
+    if (originalFeatures && originalFeatures.length > 0) {
+        var originalFeature = originalFeatures[0];
+        var capacity = parseFloat(originalFeature.get('可容納人數')) || 0;
+        var color = capacity > 500 ? '#FF6B35' : '#3399CC';
+
+        return new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: 12,
+                stroke: new ol.style.Stroke({
+                    color: '#fff',
+                    width: 2
+                }),
+                fill: new ol.style.Fill({
+                    color: color
+                })
+            })
+        });
+    }
+    return null;
+}
+
+selectCluster.getLayer().setStyle(function(feature) {
+    if (feature.get('selectclusterfeature')) {
+        return spiderMarkerStyle(feature);
+    }
+
+    if (feature.get('selectclusterlink')) {
+        return new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                color: '#333',
+                width: 1
+            })
+        });
+    }
+    return null;
+});
 
 var previousFeature = false;
 var currentFeature = false;
@@ -239,17 +296,58 @@ positionFeature.setStyle(new ol.style.Style({
 }));
 
 var firstPosDone = false;
+var countyLayerReady = false;
+var pendingUserLocation = null;
+
+countySource.on('change', function() {
+    if (countySource.getState() === 'ready') {
+        countyLayerReady = true;
+        if (pendingUserLocation && !firstPosDone) {
+            triggerCountySelection(pendingUserLocation);
+            firstPosDone = true;
+            pendingUserLocation = null;
+        }
+    }
+});
+
+function triggerCountySelection(coordinates) {
+    var features = countySource.getFeatures();
+    for (var i = 0; i < features.length; i++) {
+        var feature = features[i];
+        if (feature.getGeometry().intersectsCoordinate(coordinates)) {
+            var p = feature.getProperties();
+            if (p.COUNTYNAME) {
+                selectedCounty = p.COUNTYNAME;
+                vectorSource.clear();
+                if (!pointsPool[selectedCounty]) {
+                    $.getJSON('data/' + selectedCounty + '.json', function(c) {
+                        pointsPool[selectedCounty] = c;
+                        vectorSource.addFeatures(pointFormat.readFeatures(pointsPool[selectedCounty]));
+                        vectorSource.refresh();
+                    });
+                } else {
+                    vectorSource.addFeatures(pointFormat.readFeatures(pointsPool[selectedCounty]));
+                    vectorSource.refresh();
+                }
+                break;
+            }
+        }
+    }
+}
+
 geolocation.on('change:position', function() {
     var coordinates = geolocation.getPosition();
     positionFeature.setGeometry(coordinates ? new ol.geom.Point(coordinates) : null);
     if (false === firstPosDone) {
-        map.dispatchEvent({
-            type: 'singleclick',
-            coordinate: coordinates,
-            pixel: map.getPixelFromCoordinate(coordinates)
-        });
         appView.setCenter(coordinates);
-        firstPosDone = true;
+        appView.setZoom(18);
+
+        if (countyLayerReady) {
+            triggerCountySelection(coordinates);
+            firstPosDone = true;
+        } else {
+            pendingUserLocation = coordinates;
+        }
     }
 });
 
